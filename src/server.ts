@@ -27,6 +27,16 @@ app.get("/session", (req, res) => {
   res.json(sessions);
 });
 
+//Get con route param per ottenere una sessione specifica in base all'id
+app.get("/session/:id", (req, res) => {
+  const id = Number(req.params.id);
+  const session = sessions.find((session) => session.id === id);
+  if (!session) {
+    return res.status(404).json({ message: "Session not found" });
+  }
+  res.json(session);
+});
+
 app.post("/session", (req, res) => {
   const { name } = req.body;
   const newSession: Session = {
