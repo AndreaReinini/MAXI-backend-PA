@@ -9,6 +9,7 @@ interface Session {
 
 //Memoria temporanea per le sessioni. NON PERSISTENTE.
 const sessions: Session[] = [];
+let nextSessionId = 1;
 
 const app = express();
 
@@ -79,10 +80,21 @@ app.patch("/session/:id", validateSessionUpdate, (req, res) => {
   res.json(session);
 });
 
+//Delete con route param per eliminare una sessione specifica in base all'id
+app.delete("/session/:id", (req, res) => {
+  const id = Number(req.params.id);
+  const sessionIndex = sessions.findIndex((session) => session.id === id);
+  if (sessionIndex === -1) {
+    return res.status(404).json({ message: "Session not found" });
+  }
+  sessions.splice(sessionIndex, 1);
+  res.status(204).send();
+});
+
 app.post("/session", validateSessionCreation, (req, res) => {
   const { name } = req.body;
   const newSession: Session = {
-    id: sessions.length + 1,
+    id: nextSessionId++,
     name: name,
     status: "ACTIVE"
   };
