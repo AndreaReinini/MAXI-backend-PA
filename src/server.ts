@@ -1,4 +1,4 @@
-import express from "express";
+import express, { Request, Response, NextFunction } from "express";
 
 // Definiamo l'interfaccia per la sessione
 interface Session {
@@ -14,7 +14,20 @@ const app = express();
 
 const PORT = 3000;
 
-// Middleware JSON per il parsing del corpo delle richieste
+// Middleware PERSONALIZZATO - per validare la creazione di una sessione
+const validateSessionCreation = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const { name } = req.body;
+  if(typeof name !== "string" || name.trim().length === 0) {
+    return res.status(400).json({ message: "Name must be a non-empty string" });
+  }
+  next();
+};
+
+// Middleware EXPRESS - JSON per il parsing del corpo delle richieste
 app.use(express.json());
 
 app.get("/hello", (req, res) => {
@@ -37,7 +50,7 @@ app.get("/session/:id", (req, res) => {
   res.json(session);
 });
 
-app.post("/session", (req, res) => {
+app.post("/session", validateSessionCreation, (req, res) => {
   const { name } = req.body;
   const newSession: Session = {
     id: sessions.length + 1,
