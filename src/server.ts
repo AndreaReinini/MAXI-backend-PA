@@ -27,6 +27,24 @@ const validateSessionCreation = (
   next();
 };
 
+//Middleware PERSONALIZZATO - per validare l'update di una sessione
+const validateSessionUpdate = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const { name } = req.body;
+
+  if (name === undefined) {
+    return res.status(400).json({ message: "Name is required for update" });
+  }
+
+  if (typeof name !== "string" || name.trim().length === 0) {
+    return res.status(400).json({ message: "Name must be a non-empty string" });
+  }
+  next();
+};
+
 // Middleware EXPRESS - JSON per il parsing del corpo delle richieste
 app.use(express.json());
 
@@ -47,6 +65,17 @@ app.get("/session/:id", (req, res) => {
   if (!session) {
     return res.status(404).json({ message: "Session not found" });
   }
+  res.json(session);
+});
+
+//Patch con route param per aggiornare una sessione specifica in base all'id
+app.patch("/session/:id", validateSessionUpdate, (req, res) => {
+  const id = Number(req.params.id);
+  const session = sessions.find((session) => session.id === id);
+  if (!session) {
+    return res.status(404).json({ message: "Session not found" });
+  }
+  session.name = req.body.name.trim();
   res.json(session);
 });
 
