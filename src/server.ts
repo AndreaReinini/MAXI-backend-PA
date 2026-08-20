@@ -1,6 +1,7 @@
-import sequelize from "./config/database.js";
 import express from "express";
 import sessionRoutes from "./routes/sessionRoutes.js";
+import sequelize from "./config/database.js";
+import "./models/Session.js"; // Importazione del modello Session per garantire che sia registrato con Sequelize
 
 const app = express();
 const PORT = 3000;
@@ -21,9 +22,15 @@ app.use("/session", sessionRoutes);
 // Avvio del server e connessione al database
 async function startServer() {
   try {
-    // Test di connessione al database
+    // Verifica che PostgreSQL sia in esecuzione e che le credenziali siano corrette
     await sequelize.authenticate();
     console.log("Database connection has been established successfully.");
+
+    //Sincronizza i modelli con il database (crea le tabelle se non esistono)
+    await sequelize.sync();
+    console.log("Database synchronized successfully.");
+
+    // Avvio del server Express
 
     app.listen(PORT, () => {
       console.log(`Server is running on http://localhost:${PORT}`);
