@@ -1,5 +1,7 @@
 import express, { Request, Response, NextFunction } from "express";
 
+import { validateSessionCreation, validateSessionUpdate } from "./middleware/sessionValidation.js";
+
 // Definiamo l'interfaccia per la sessione
 interface Session {
   id: number;
@@ -14,37 +16,6 @@ let nextSessionId = 1;
 const app = express();
 
 const PORT = 3000;
-
-// Middleware PERSONALIZZATO - per validare la creazione di una sessione
-const validateSessionCreation = (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  const { name } = req.body;
-  if(typeof name !== "string" || name.trim().length === 0) {
-    return res.status(400).json({ message: "Name must be a non-empty string" });
-  }
-  next();
-};
-
-//Middleware PERSONALIZZATO - per validare l'update di una sessione
-const validateSessionUpdate = (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  const { name } = req.body;
-
-  if (name === undefined) {
-    return res.status(400).json({ message: "Name is required for update" });
-  }
-
-  if (typeof name !== "string" || name.trim().length === 0) {
-    return res.status(400).json({ message: "Name must be a non-empty string" });
-  }
-  next();
-};
 
 // Middleware EXPRESS - JSON per il parsing del corpo delle richieste
 app.use(express.json());

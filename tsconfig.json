@@ -1,14 +1,27 @@
 {
   "compilerOptions": {
+    // Compila il codice verso una versione moderna di JavaScript
     "target": "ES2022",
+
+    // Usa il sistema di moduli ESM secondo le regole moderne di Node.js
     "module": "NodeNext",
+
+    // Risolve gli import seguendo le regole ESM di Node.js
     "moduleResolution": "NodeNext",
 
+    // Cartella contenente il codice TypeScript sorgente
     "rootDir": "./src",
+
+    // Cartella in cui viene generato il JavaScript compilato
     "outDir": "./dist",
 
+    // Abilita controlli TypeScript più rigorosi
     "strict": true,
+
+    // Facilita l'importazione di librerie CommonJS da TypeScript
     "esModuleInterop": true,
+
+    // Evita controlli approfonditi sui file di definizione delle dipendenze
     "skipLibCheck": true
   }
 }
