@@ -1,3 +1,4 @@
+import sequelize from "./config/database.js";
 import express from "express";
 import sessionRoutes from "./routes/sessionRoutes.js";
 
@@ -17,6 +18,19 @@ app.get("/hello", (req, res) => {
 // Tutte le rotte relative alle sessioni saranno gestite da sessionRoutes
 app.use("/session", sessionRoutes);
 
-app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
-});
+// Avvio del server e connessione al database
+async function startServer() {
+  try {
+    // Test di connessione al database
+    await sequelize.authenticate();
+    console.log("Database connection has been established successfully.");
+
+    app.listen(PORT, () => {
+      console.log(`Server is running on http://localhost:${PORT}`);
+    });
+  } catch (error) {
+    console.error("Unable to connect to the database:", error);
+  }
+}
+
+startServer();
