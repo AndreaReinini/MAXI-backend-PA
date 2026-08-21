@@ -37,3 +37,22 @@ export const validateJobUpdate = (
 
     next();
 };
+
+export const validateJobCompletion = (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    const { result } = req.body ?? {};
+
+    if (
+        typeof result !== "object" ||
+        result === null ||
+        Array.isArray(result)
+    ) {
+        next(new AppError(400, "Result must be a JSON object"));
+        return;
+    }
+
+    next();
+};

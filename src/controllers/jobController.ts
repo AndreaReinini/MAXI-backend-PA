@@ -59,3 +59,28 @@ export async function updateJobStatus(req: Request, res: Response) {
 
     res.json(job);
 }
+
+export async function completeJob(req: Request, res: Response) {
+    const id = Number(req.params.id);
+    const { result } = req.body;
+
+    const job = await Job.findByPk(id);
+
+    if (!job) {
+        throw new AppError(404, "Job not found");
+    }
+
+    if (job.status !== "PROCESSING") {
+        throw new AppError(
+            409,
+            `Cannot complete job from status ${job.status}`
+        );
+    }
+
+    await job.update({
+        status: "COMPLETED",
+        result
+    });
+
+    res.json(job);
+}

@@ -7,6 +7,8 @@ export const JOB_STATUSES = [
 
 export type JobStatus = typeof JOB_STATUSES[number];
 
+
+//Non permettiamo processing -> completed, perchè faremo un patch che sposta a completed con aggiunta di risultato
 export function isValidJobTransition(
     currentStatus: JobStatus,
     newStatus: JobStatus
@@ -16,7 +18,7 @@ export function isValidJobTransition(
     }
 
     if (currentStatus === "PROCESSING") {
-        return newStatus === "COMPLETED" || newStatus === "FAILED";
+        return newStatus === "FAILED";
     }
 
     return false;

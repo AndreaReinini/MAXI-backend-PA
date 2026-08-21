@@ -1,6 +1,6 @@
 import { Router } from "express";
-import { createJob, getJobs, getJobById, updateJobStatus } from "../controllers/jobController.js";
-import { validateJobCreation, validateJobUpdate } from "../middleware/jobValidation.js";
+import { createJob, getJobs, getJobById, updateJobStatus, completeJob } from "../controllers/jobController.js";
+import { validateJobCompletion, validateJobCreation, validateJobUpdate } from "../middleware/jobValidation.js";
 
 const router = Router();
 
@@ -15,6 +15,12 @@ router.patch(
     "/:id/status",
     validateJobUpdate,
     updateJobStatus
+);
+
+router.patch(
+    "/:id/complete",
+    validateJobCompletion,
+    completeJob
 );
 
 export default router;
