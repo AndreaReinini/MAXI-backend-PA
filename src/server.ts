@@ -2,6 +2,8 @@ import express from "express";
 import sessionRoutes from "./routes/sessionRoutes.js";
 import sequelize from "./config/database.js";
 import "./models/Session.js"; // Importazione del modello Session per garantire che sia registrato con Sequelize
+import errorHandler from "./middleware/errorHandler.js";
+import notFound from "./middleware/notFound.js";
 
 const app = express();
 const PORT = 3000;
@@ -18,6 +20,12 @@ app.get("/hello", (req, res) => {
 
 // Tutte le rotte relative alle sessioni saranno gestite da sessionRoutes
 app.use("/session", sessionRoutes);
+
+// Middleware per gestire le rotte non trovate - deve essere posizionato dopo tutte le altre rotte
+app.use(notFound);
+
+// Middleware per la gestione degli errori - dopo middleware di routing
+app.use(errorHandler);
 
 // Avvio del server e connessione al database
 async function startServer() {

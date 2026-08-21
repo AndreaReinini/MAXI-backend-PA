@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from "express";
+import { AppError } from "../errors/AppError.js";
 
 // Middleware PERSONALIZZATO - per validare la creazione di una sessione
 export const validateSessionCreation = (
@@ -8,7 +9,8 @@ export const validateSessionCreation = (
 ) => {
   const { name } = req.body;
   if(typeof name !== "string" || name.trim().length === 0) {
-    return res.status(400).json({ message: "Name must be a non-empty string" });
+    next(new AppError(400, "Name is required and must be a non-empty string"));
+    return;
   }
   next();
 };
@@ -22,11 +24,13 @@ export const validateSessionUpdate = (
   const { name } = req.body;
 
   if (name === undefined) {
-    return res.status(400).json({ message: "Name is required for update" });
+    next(new AppError(400, "Name is required for update"));
+    return;
   }
 
   if (typeof name !== "string" || name.trim().length === 0) {
-    return res.status(400).json({ message: "Name must be a non-empty string" });
+    next(new AppError(400, "Name must be a non-empty string"));
+    return;
   }
   next();
 };
