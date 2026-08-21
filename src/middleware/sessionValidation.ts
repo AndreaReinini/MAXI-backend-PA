@@ -7,7 +7,7 @@ export const validateSessionCreation = (
   res: Response,
   next: NextFunction
 ) => {
-  const { name } = req.body;
+  const { name } = req.body ?? {};
   if(typeof name !== "string" || name.trim().length === 0) {
     next(new AppError(400, "Name is required and must be a non-empty string"));
     return;
@@ -21,7 +21,7 @@ export const validateSessionUpdate = (
   res: Response,
   next: NextFunction
 ) => {
-  const { name } = req.body;
+  const { name } = req.body ?? {};
 
   if (name === undefined) {
     next(new AppError(400, "Name is required for update"));

@@ -1,11 +1,12 @@
 import { DataTypes, Model } from "sequelize";
 import sequelize from "../config/database.js";
+import { JOB_STATUSES, type JobStatus } from "../types/jobStatus.js";
 
 // Definizione del modello Job
 class Job extends Model {
     declare id: number;
     declare sessionId: number;
-    declare status: string;
+    declare status: JobStatus;
     declare result: object | null;
 }
 
@@ -27,7 +28,7 @@ Job.init(
             onDelete: "CASCADE", // Elimina automaticamente se la sessione viene eliminata
         },
         status: {
-            type: DataTypes.STRING,
+            type: DataTypes.ENUM(...JOB_STATUSES),
             allowNull: false,
             defaultValue: "PENDING",
         },
