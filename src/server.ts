@@ -4,6 +4,9 @@ import sequelize from "./config/database.js";
 import "./models/Session.js"; // Importazione del modello Session per garantire che sia registrato con Sequelize
 import errorHandler from "./middleware/errorHandler.js";
 import notFound from "./middleware/notFound.js";
+import "./models/Job.js"; // Importazione del modello Job per garantire che sia registrato con Sequelize
+import "./models/associations.js"; // Importazione delle associazioni tra i modelli
+import jobRoutes from "./routes/jobRoutes.js";
 
 const app = express();
 const PORT = 3000;
@@ -20,6 +23,9 @@ app.get("/hello", (req, res) => {
 
 // Tutte le rotte relative alle sessioni saranno gestite da sessionRoutes
 app.use("/session", sessionRoutes);
+
+// Tutte le rotte relative ai lavori saranno gestite da jobRoutes
+app.use("/job", jobRoutes);
 
 // Middleware per gestire le rotte non trovate - deve essere posizionato dopo tutte le altre rotte
 app.use(notFound);
